@@ -16,6 +16,7 @@ namespace fast_float {
 // the result, with the "high" part corresponding to the most significant bits and the
 // low part corresponding to the least significant bits.
 //
+/*
 template <int bit_precision>
 fastfloat_really_inline FASTFLOAT_CONSTEXPR20
 value128 compute_product_approximation(int64_t q, uint64_t w) {
@@ -38,6 +39,20 @@ value128 compute_product_approximation(int64_t q, uint64_t w) {
   }
   return firstproduct;
 }
+/*/
+template <int bit_precision>
+fastfloat_really_inline FASTFLOAT_CONSTEXPR20
+value128 compute_product_approximation(int64_t q, uint64_t w) {
+  const int index = 2 * int(q - powers::smallest_power_of_five);
+  value128 result = full_multiplication(w, powers::power_of_five_128[index]);
+  value128 second = full_multiplication(w, powers::power_of_five_128[index + 1]);
+
+  result.low += second.high;
+  result.high += second.high < result.low;
+
+  return result;
+}
+//*/
 
 namespace detail {
 /**
